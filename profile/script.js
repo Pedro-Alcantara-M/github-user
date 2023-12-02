@@ -6,6 +6,8 @@ let userName = document.querySelector("#username");
 let followers = document.querySelector("#followers");
 let following = document.querySelector("#following");
 let repoDetails = document.querySelector("#repoDetails");
+let email = document.querySelector("#email");
+let bio = document.querySelector("#bio");
 
 const api = axios.create({
   baseURL: " https://api.github.com/",
@@ -30,8 +32,10 @@ async function fetchGetUser() {
       avatarImg.src = currentUser.avatar_url;
       nameUser.innerHTML = currentUser.name;
       userName.innerHTML = currentUser.login;
-      followers.innerHTML = `followers: <strong>${currentUser.followers}</strong>`;
-      following.innerHTML = `following:  <strong>${currentUser.following}</strong>`;
+      followers.innerHTML = `<strong>${currentUser.followers}</strong> followers`;
+      following.innerHTML = `<strong>${currentUser.following}</strong> following`;
+      email.innerHTML = currentUser.email ? `Email: ${currentUser.email}` : "This profile has no email";
+      bio.innerHTML =  currentUser.bio ? `Bio: ${currentUser.bio}` : "This profile has no bio" ;
       return currentUser;
     }
   } catch (error) {
