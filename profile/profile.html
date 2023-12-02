@@ -47,7 +47,7 @@
                     <div class="d-flex border-bottom border-1 pb-3">
                         <input type="text" id="searchRepo" class="form-control" placeholder="Search"
                             aria-label="Search-repo" aria-describedby="basic-addon1">
-                            
+
                             <span class="material-symbols-outlined">
                                 search
                                 </span>
@@ -68,7 +68,7 @@
                                 </div>
                             </div>
                             <div class="d-flex flex-column">
-                                <button>Details</button>
+                                <button id="repoDetails">Details</button>
                             </div>
                         </div>
                     </div>
@@ -78,6 +78,21 @@
         </div>
         </div>
     </main>
+    <footer class="fixed-bottom mb-3">
+        <div class="d-flex flex-column justify-content-center align-items-center gap-2">
+            <div class="d-flex gap-3">
+                <a href="#" class="text-secondary">Terms</a>
+                <a href="#" class="text-secondary">Privacy</a>
+                <a href="#" class="text-secondary">Security</a>
+                <a href="#" class="text-secondary">Status</a>
+                <a href="#" class="text-secondary">Docs</a>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <ion-icon name="logo-github" class="fs-3 text-muted"></ion-icon>
+                <span class="text-secondary">© 2023 GitHub, Inc.</span>
+            </div>
+        </div>
+    </footer>
 </body>
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

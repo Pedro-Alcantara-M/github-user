@@ -5,6 +5,7 @@ let nameUser = document.querySelector("#name");
 let userName = document.querySelector("#username");
 let followers = document.querySelector("#followers");
 let following = document.querySelector("#following");
+let repoDetails = document.querySelector("#repoDetails");
 
 const api = axios.create({
   baseURL: " https://api.github.com/",
@@ -12,6 +13,14 @@ const api = axios.create({
     "X-GitHub-Api-Version": "2022-11-28",
   },
 });
+
+
+function goToRepositoryDetails() {
+  window.location.href = "../repository/repository.html";
+}
+
+repoDetails.addEventListener("click", goToRepositoryDetails);
+
 
 async function fetchGetUser() {
   try {
@@ -31,8 +40,4 @@ async function fetchGetUser() {
   }
 }
 
-async function main() {
-  await fetchGetUser();
-}
-
-main()
+fetchGetUser()
