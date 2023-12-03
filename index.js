@@ -3,9 +3,7 @@ let currentUsername = "";
 
 
 usernameInput.addEventListener("input", function () {
-  // This function will be called whenever the input value changes
   currentUsername = usernameInput.value;
-  console.log("Current Username:", currentUsername);
 });
 
 const api = axios.create({
@@ -27,5 +25,3 @@ async function fetchSearch() {
     console.error("Error:", error);
   }
 }
-
-
