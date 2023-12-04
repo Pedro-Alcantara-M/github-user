@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>GitHub Clone</title>
+    <title>GitHub Search User</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -16,23 +16,31 @@
 
 <body class="vh-100">
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
+        <div class="container-fluid  d-flex flex-row align-items-center justify-content-between">
             <a class="navbar-brand" href="#">
                 <img src="https://github.com/fluidicon.png" alt="GitHub Logo" width="30" height="30"
                     class="d-inline-block align-top">
                 GitHub
             </a>
+            <button id="logout" class="d-flex flex-row align-items-center gap-2 btn text-light">Logout <ion-icon
+                    name="log-out-outline"></ion-icon></button>
         </div>
     </nav>
 
     <main style="padding-bottom: 100px;" class="container-md align-items-start justify-content-center">
         <div class="row ">
-            <aside class="col-4 flex-column p-2">
+            <aside class="col-md-4 col-sm-12 flex-column p-2">
                 <div class="row">
-                    <img id="avatarImg" alt="avatar" class="rounded-circle mt-4 mx-2 w-75">
-                    <h2 id="name" class="d-inline mt-3 w-100 fs-3 fw-bold"></h2>
-                    <span id="username" class="d-inline w-100 fs-4 text-secondary"></span>
+                    <div class="col-sm-4 col-md-12">
+                        <img id="avatarImg" alt="avatar" class="rounded-circle mt-4 mx-2 w-75">
+                    </div>
+                    <div class="col-sm-8 col-md-12 mt-3">
+                        <h2 id="name" class="d-inline mt-3 w-100 fs-3 fw-bold"></h2>
+                    </div>
+                    <div class="col-sm-8 col-md-12">
+                        <span id="username" class="d-inline w-100 fs-4 text-secondary"></span>
+                    </div>
 
                     <div class="d-flex flex-row justify-content-start align-items-center gap-2">
                         <span class="material-symbols-outlined fs-6 text-muted align-items-center">
@@ -46,14 +54,13 @@
                     <span id="bio" style="text-align: justify" class="text-secondary"></span>
                 </div>
             </aside>
-            <section class="col-8 mt-3 ">
+            <section class="col-sm-12 col-md-8  mt-3 ">
                 <div class="justify-content-center align-items-center pb-3">
                     <div class="d-flex border-bottom border-1 pb-3">
                         <div class="col input-group">
                             <input id="searchInput" type="text" class="form-control bg-light" placeholder="Search"
                                 aria-label="Search" aria-describedby="button-addon2">
-                            <button
-                                id="searchButton"
+                            <button id="searchButton"
                                 class="btn btn-outline-secondary  d-flex justify-content-center align-items-center"
                                 type="button" id="button-addon2">
                                 <span class="material-symbols-outlined">
@@ -62,14 +69,29 @@
                             </button>
                         </div>
 
-                        <button type="submit" class="btn btn-outline-secondary ms-4" onclick="fetchSearch()">
-                            type</button>
+                        <div class="dropdown">
+                            <button class="btn btn btn-outline-secondary ms-4 dropdown-toggle" type="button"
+                                id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                Language
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li> <button class="btn filterLanguage" name="">None</button></li>
+                                <li> <button class="btn filterLanguage" name="JavaScript">Javascript</button></li>
+                                <li>
+                                    <button class="btn filterLanguage" name="Typescript">Typescript</button>
+                                </li>
+                                <li>
+                                    <button class="btn filterLanguage" name="HTML">HTML</button>
+                                </li>
+                            </ul>
+                        </div>
 
-                        <button type="submit" class="btn btn-outline-secondary ms-4" onclick="fetchSearch()">
-                            Sort</button>
+                        <button id="sortButton" class="btn btn-outline-secondary ms-4">
+                            Sort
+                        </button>
                     </div>
-                    
-          
+
+
                     <div id="repoList" class="d-flex flex-column justify-content-start">
                         <!-- Repository list -->
                     </div>

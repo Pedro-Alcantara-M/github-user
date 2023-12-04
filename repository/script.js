@@ -2,7 +2,8 @@ let currentRepo;
 let contributionsList = [];
 let languages = {};
 const repoName = localStorage.repository;
-let reporAvatarImg = document.querySelector("#reporAvatarImg");
+const logouButton = document.getElementById("logout");
+const backButton = document.getElementById("backButton");
 let nameUser = document.querySelector("#name");
 let copyCli = document.querySelector("#copyCli");
 let copySsh = document.querySelector("#copySsh");
@@ -18,6 +19,9 @@ let whatching = document.querySelector("#whatching");
 let fork = document.querySelector("#fork");
 let stars = document.querySelector("#stars");
 let contributors = document.querySelector("#contributors");
+let legends = document.querySelector("#legends");
+
+let isMobile = window.innerWidth < 768;
 
 const api = axios.create({
   baseURL: " https://api.github.com/",
@@ -43,7 +47,8 @@ list.map((el) => {
 });
 
 function copyToClipboard(text) {
-  navigator.clipboard.writeText(text)
+  navigator.clipboard
+    .writeText(text)
     .then(() => {
       alert("Copied");
     })
@@ -52,6 +57,15 @@ function copyToClipboard(text) {
       alert("Unable to copy to clipboard");
     });
 }
+
+backButton.addEventListener("click", function () {
+  window.location.href = "../profile/profile.html";
+})
+
+logout.addEventListener("click", function () {
+  localStorage.clear();
+  window.location.href = "../index.html";
+});
 
 document.addEventListener("DOMContentLoaded", function () {
   var popover = new bootstrap.Popover(
@@ -63,16 +77,17 @@ document.addEventListener("DOMContentLoaded", function () {
   );
 });
 
-copyCliButton.addEventListener("click", () => copyToClipboard(copyCli.value))
-copySshButton.addEventListener("click", () => copyToClipboard(copySsh.value))
-copyHttpsButton.addEventListener("click", () => copyToClipboard(copyHttps.value))
+copyCliButton.addEventListener("click", () => copyToClipboard(copyCli.value));
+copySshButton.addEventListener("click", () => copyToClipboard(copySsh.value));
+copyHttpsButton.addEventListener("click", () =>
+  copyToClipboard(copyHttps.value)
+);
 
 async function fetchGetRepo() {
   try {
     const response = await api.get(`repos/${repoName}`);
     if (response.status === 200) {
       currentRepo = response.data;
-      reporAvatarImg.src = currentRepo.owner.avatar_url;
       copyCli.value = currentRepo.git_url;
       copySsh.value = currentRepo.ssh_url;
       copyHttps.value = currentRepo.clone_url;
@@ -123,7 +138,7 @@ async function fetchGetLanguages() {
 }
 
 function renderContributors(contributors) {
-  const contributorsContainer = document.querySelector(".w-50");
+  const contributorsContainer = document.querySelector(".contribuitorsContainer");
 
   contributors.forEach((contributor) => {
     const contributorDiv = document.createElement("div");
@@ -139,7 +154,7 @@ function renderContributors(contributors) {
     const githubLink = document.createElement("a");
     githubLink.href = contributor.html_url;
     githubLink.target = "_blank";
-    githubLink.classList.add("pe-2", "fw-bold");
+    githubLink.classList.add("pe-2", "fw-bold", "link-primary");
     githubLink.textContent = contributor.login;
 
     const contributionsSpan = document.createElement("span");
@@ -157,13 +172,12 @@ function renderContributors(contributors) {
 
 function renderProgressBars() {
   const values = Object.values(languages);
-  const keys = Object.keys(languages);
-  const total = values.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-  const progressBarDiv = document.createElement("div");
-  const progressContainer = document.querySelector(".progress");
-  progressBarDiv.style.width = "100%";
-  progressBarDiv.style.height = "100px";
-  
+  const total = values.reduce(
+    (accumulator, currentValue) => accumulator + currentValue,
+    0
+  );
+  const progressContainer =  document.querySelector(".progress");
+
   for (const skill in languages) {
     if (Object.hasOwnProperty.call(languages, skill)) {
       const progressValue = languages[skill];
@@ -175,24 +189,19 @@ function renderProgressBars() {
         case "PHP":
           progressBar.style.width = `${(progressValue / total) * 100}%`;
           progressBar.style.backgroundColor = "#17a2b8";
-          progressBar.textContent = skill;
           break;
         case "CSS":
         case "SCSS":
           progressBar.style.width = `${(progressValue / total) * 100}%`;
           progressBar.style.backgroundColor = "#28a745";
-          progressBar.textContent = "CSS";
-          progressBar.textContent = skill;
           break;
         case "JavaScript":
           progressBar.style.width = `${(progressValue / total) * 100}%`;
           progressBar.style.backgroundColor = "#ffc107";
-          progressBar.textContent = skill;
           break;
         case "HTML":
           progressBar.style.width = `${(progressValue / total) * 100}%`;
           progressBar.style.backgroundColor = "#dc3545";
-          progressBar.textContent = skill;
           break;
         default:
           break;
@@ -207,12 +216,71 @@ function renderProgressBars() {
   }
 }
 
+function renderLegends() {
+  const values = Object.values(languages);
+  const total = values.reduce(
+    (accumulator, currentValue) => accumulator + currentValue,
+    0
+  );
+  const legendContainer = document.querySelector(".legend");
+
+  for (const language in languages) {
+    if (Object.hasOwnProperty.call(languages, language)) {
+      const languageValue = languages[language];
+
+      const legendItem = document.createElement("div");
+      legendItem.classList.add(
+        "legend-item",
+        "d-flex",
+        "align-items-center",
+        "flex-row",
+        "gap-2"
+      );
+
+      const legendCircle = document.createElement("div");
+      legendCircle.classList.add("rounded");
+      legendCircle.style.width = "15px";
+      legendCircle.style.height = "15px";
+      legendCircle.style.backgroundColor = getLegendColor(language);
+
+      const legendLabel = document.createElement("small");
+      legendLabel.textContent = language;
+
+      const legendValue = document.createElement("small");
+      legendValue.textContent =
+        " (" + Math.round((languageValue / total) * 100) + "%)";
+
+      legendItem.appendChild(legendCircle);
+      legendItem.appendChild(legendLabel);
+      legendItem.appendChild(legendValue);
+
+      legendContainer.appendChild(legendItem);
+    }
+  }
+}
+
+function getLegendColor(language) {
+  switch (language) {
+    case "TypeScript":
+      return "#17a2b8"; // Blue
+    case "CSS":
+      return "#28a745"; // Green
+    case "JavaScript":
+      return "#ffc107"; // Yellow
+    case "HTML":
+      return "#dc3545"; // Red
+    default:
+      return "#6c757d"; // Gray for other languages
+  }
+}
+
 async function main() {
   await fetchGetRepo();
   await fetchGetContributors();
   await fetchGetLanguages();
-  renderProgressBars()
+  renderProgressBars();
   renderContributors(contributionsList);
+  renderLegends();
 }
 
 main();

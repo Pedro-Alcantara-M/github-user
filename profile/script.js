@@ -1,5 +1,6 @@
 let currentUser;
 let repoList;
+let repoListFiltred;
 const username = localStorage.username;
 let avatarImg = document.querySelector("#avatarImg");
 let nameUser = document.querySelector("#name");
@@ -10,6 +11,11 @@ let email = document.querySelector("#email");
 let bio = document.querySelector("#bio");
 let searchInput = document.querySelector("#searchInput");
 let searchButton = document.querySelector("#searchButton");
+const repoListContainer = document.getElementById("repoList");
+const logouButton = document.getElementById("logout");
+let sortButtons = document.querySelectorAll(".filterLanguage");
+
+let sortDirection = 'desc'; 
 
 const api = axios.create({
   baseURL: " https://api.github.com/",
@@ -23,14 +29,42 @@ function formatDate(dateString) {
   return new Date(dateString).toLocaleDateString(undefined, options);
 }
 
-function searchByName(array, name) {
-  const lowercaseName = name.toLowerCase();
-  console.log('array', array)
-  return array.filter(
-    (item) => {
-      item.name?.toLowerCase() === lowercaseName
+function searchArray(array, value) {
+  if (!array) {
+    return [];
+  }
+
+  return array.filter((item) => {
+    for (const key in item) {
+      if (
+        Object.prototype.hasOwnProperty.call(item, key) &&
+        String(item[key]).toLowerCase().includes(String(value).toLowerCase())
+      ) {
+        return true;
+      }
     }
-  );
+    return false;
+  });
+}
+
+function filterByLanguage(array, language) {
+  return array.filter(item => {
+    const itemLanguage = item.language ? item.language.toLowerCase() : '';
+    return itemLanguage === language.toLowerCase();
+  });
+}
+
+function sortByName(array, direction) {
+  return array.sort((a, b) => {
+      const nameA = a.name.toLowerCase();
+      const nameB = b.name.toLowerCase();
+
+      if (direction === 'asc') {
+          return nameA.localeCompare(nameB);
+      } else {
+          return nameB.localeCompare(nameA);
+      }
+  });
 }
 
 function goToRepositoryDetails(repo) {
@@ -43,7 +77,7 @@ async function fetchGetRepo() {
     const response = await api.get(`/users/${username}/repos`);
     if (response.status === 200) {
       repoList = response.data;
-      console.log({ repoList });
+      repoListFiltred = response.data;
       return repoList;
     }
   } catch (error) {
@@ -71,14 +105,12 @@ async function fetchGetUser() {
       return currentUser;
     }
   } catch (error) {
-    console.log({ error });
+    window.location.href = "../index.html";
     alert("This user does not exist!");
   }
 }
 
 function renderRepoList(repositories) {
-  const repoListContainer = document.getElementById("repoList");
-
   repositories.forEach((repo) => {
     const repoItem = document.createElement("div");
     repoItem.classList.add(
@@ -122,8 +154,10 @@ function renderRepoList(repositories) {
 
     const repoDetailsButton = document.createElement("button");
     repoDetailsButton.classList.add("btn");
-    repoDetailsButton.textContent = "Details";
-    repoDetailsButton.addEventListener("click", () => goToRepositoryDetails(repo.full_name));
+    repoDetailsButton.textContent = "details";
+    repoDetailsButton.addEventListener("click", () =>
+      goToRepositoryDetails(repo.full_name)
+    );
 
     repoDetailsContainer.appendChild(languageSpan);
     repoDetailsContainer.appendChild(updatedSpan);
@@ -138,22 +172,52 @@ function renderRepoList(repositories) {
   });
 }
 
+logout.addEventListener('click', function () {
+  localStorage.clear();
+  window.location.href = "../index.html";
+});
+
 searchButton.addEventListener("click", function () {
-  const searchResult = searchByName(repoList, searchInput.value);
-  if (searchResult) {
-    console.log("Item found:", searchResult);
-    repoList = [searchResult];
+  repoListFiltred = [];
+  repoListContainer.innerHTML = "";
+  const searchResult = searchArray(repoList, searchInput.value);
+
+  if (searchResult.length > 0) {
+    repoListFiltred = searchResult;
   } else {
-    console.log("Item not found");
-    repoList = [];
+    repoListFiltred = repoList;
   }
-  return renderRepoList(repoList);
+
+  return renderRepoList(repoListFiltred);
+});
+
+sortButtons.forEach(button => {
+  
+  button.addEventListener('click', function () {
+    repoListContainer.innerHTML = "";
+    searchInput.value = "";
+    const selectedLanguage = button.textContent.toLowerCase();
+    repoListFiltred = filterByLanguage(repoList, selectedLanguage);
+
+    if (!repoListFiltred.length > 0) {
+      repoListFiltred = repoList;
+    }
+    renderRepoList(repoListFiltred);
+  });
+});
+
+document.getElementById('sortButton').addEventListener('click', function () {
+  repoListContainer.innerHTML = "";
+  repoListFiltred = sortByName(repoListFiltred, sortDirection);
+  renderRepoList(repoListFiltred);
+
+  sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
 });
 
 async function renderPage() {
   await fetchGetUser();
   await fetchGetRepo();
-  renderRepoList(repoList);
+  renderRepoList(repoListFiltred);
 }
 
 renderPage();
