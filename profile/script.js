@@ -8,6 +8,8 @@ let followers = document.querySelector("#followers");
 let following = document.querySelector("#following");
 let email = document.querySelector("#email");
 let bio = document.querySelector("#bio");
+let searchInput = document.querySelector("#searchInput");
+let searchButton = document.querySelector("#searchButton");
 
 const api = axios.create({
   baseURL: " https://api.github.com/",
@@ -16,7 +18,23 @@ const api = axios.create({
   },
 });
 
-function goToRepositoryDetails() {
+function formatDate(dateString) {
+  const options = { year: "numeric", month: "short", day: "numeric" };
+  return new Date(dateString).toLocaleDateString(undefined, options);
+}
+
+function searchByName(array, name) {
+  const lowercaseName = name.toLowerCase();
+  console.log('array', array)
+  return array.filter(
+    (item) => {
+      item.name?.toLowerCase() === lowercaseName
+    }
+  );
+}
+
+function goToRepositoryDetails(repo) {
+  localStorage.setItem("repository", repo);
   window.location.href = "../repository/repository.html";
 }
 
@@ -59,36 +77,53 @@ async function fetchGetUser() {
 }
 
 function renderRepoList(repositories) {
-  const repoListContainer = document.getElementById('repoList');
+  const repoListContainer = document.getElementById("repoList");
 
-  repositories.forEach(repo => {
-    const repoItem = document.createElement('div');
-    repoItem.classList.add('d-flex', 'justify-content-between', 'align-items-center', 'py-3', 'border-bottom', 'border-1');
+  repositories.forEach((repo) => {
+    const repoItem = document.createElement("div");
+    repoItem.classList.add(
+      "d-flex",
+      "justify-content-between",
+      "align-items-center",
+      "py-3",
+      "border-bottom",
+      "border-1"
+    );
 
-    const repoInfoContainer = document.createElement('div');
-    repoInfoContainer.classList.add('d-flex', 'flex-column');
+    const repoInfoContainer = document.createElement("div");
+    repoInfoContainer.classList.add("d-flex", "flex-column");
 
-    const repoNameLink = document.createElement('a');
-    repoNameLink.classList.add('fw-bold', 'fs-5', 'link-primary', 'text-decoration-none');
+    const repoNameLink = document.createElement("a");
+    repoNameLink.classList.add(
+      "fw-bold",
+      "fs-5",
+      "link-primary",
+      "text-decoration-none"
+    );
     repoNameLink.href = repo.html_url;
-    repoNameLink.target = '_blank';
+    repoNameLink.target = "_blank";
     repoNameLink.textContent = repo.name;
 
-    const repoDetailsContainer = document.createElement('div');
-    repoDetailsContainer.classList.add('d-flex', 'flex-row', 'align-items-center', 'gap-4');
+    const repoDetailsContainer = document.createElement("div");
+    repoDetailsContainer.classList.add(
+      "d-flex",
+      "flex-row",
+      "align-items-center",
+      "gap-4"
+    );
 
-    const languageSpan = document.createElement('small');
-    languageSpan.classList.add('text-muted');
+    const languageSpan = document.createElement("small");
+    languageSpan.classList.add("text-muted");
     languageSpan.textContent = repo.language;
 
-    const updatedSpan = document.createElement('small');
-    updatedSpan.classList.add('text-muted');
+    const updatedSpan = document.createElement("small");
+    updatedSpan.classList.add("text-muted");
     updatedSpan.textContent = `Updated ${formatDate(repo.updated_at)}`;
 
-    const repoDetailsButton = document.createElement('button');
-    repoDetailsButton.classList.add('btn');
-    repoDetailsButton.textContent = 'Details';
-    repoDetailsButton.addEventListener('click', () => goToRepositoryDetails());
+    const repoDetailsButton = document.createElement("button");
+    repoDetailsButton.classList.add("btn");
+    repoDetailsButton.textContent = "Details";
+    repoDetailsButton.addEventListener("click", () => goToRepositoryDetails(repo.full_name));
 
     repoDetailsContainer.appendChild(languageSpan);
     repoDetailsContainer.appendChild(updatedSpan);
@@ -103,10 +138,17 @@ function renderRepoList(repositories) {
   });
 }
 
-function formatDate(dateString) {
-  const options = { year: "numeric", month: "short", day: "numeric" };
-  return new Date(dateString).toLocaleDateString(undefined, options);
-}
+searchButton.addEventListener("click", function () {
+  const searchResult = searchByName(repoList, searchInput.value);
+  if (searchResult) {
+    console.log("Item found:", searchResult);
+    repoList = [searchResult];
+  } else {
+    console.log("Item not found");
+    repoList = [];
+  }
+  return renderRepoList(repoList);
+});
 
 async function renderPage() {
   await fetchGetUser();
