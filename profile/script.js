@@ -14,7 +14,7 @@ let searchButton = document.querySelector("#searchButton");
 const repoListContainer = document.getElementById("repoList");
 const logouButton = document.getElementById("logout");
 let sortButtons = document.querySelectorAll(".filterLanguage");
-
+let currentWidth = window.innerWidth;
 let sortDirection = 'desc'; 
 
 const api = axios.create({
@@ -23,6 +23,16 @@ const api = axios.create({
     "X-GitHub-Api-Version": "2022-11-28",
   },
 });
+
+function adjustFilterButtonsMargin() {
+  const currentWidth = window.innerWidth;
+
+  if (currentWidth < 991) {
+      document.getElementById('filterButtons').classList.add('mt-2');
+  } else {
+      document.getElementById('filterButtons').classList.remove('mt-2');
+  }
+}
 
 function formatDate(dateString) {
   const options = { year: "numeric", month: "short", day: "numeric" };
@@ -214,6 +224,7 @@ document.getElementById('sortButton').addEventListener('click', function () {
   sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
 });
 
+window.addEventListener('resize', adjustFilterButtonsMargin);
 async function renderPage() {
   await fetchGetUser();
   await fetchGetRepo();
