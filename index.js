@@ -2,9 +2,7 @@ let usernameInput = document.querySelector("#username");
 let currentUsername = "";
 
 
-usernameInput.addEventListener("input", function () {
-  currentUsername = usernameInput.value;
-});
+
 
 const api = axios.create({
   baseURL: " https://api.github.com/",
@@ -12,6 +10,8 @@ const api = axios.create({
     "X-GitHub-Api-Version": "2022-11-28",
   },
 });
+
+
 
 async function fetchSearch() {
   try {
@@ -26,3 +26,15 @@ async function fetchSearch() {
     console.error("Error:", error);
   }
 }
+
+function startEventListeners() {
+  usernameInput.addEventListener("input", function () {
+    currentUsername = usernameInput.value;
+  });
+}
+
+function init() {
+  startEventListeners();
+}
+
+init()

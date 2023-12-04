@@ -4,22 +4,22 @@ let languages = {};
 const repoName = localStorage.repository;
 const logouButton = document.getElementById("logout");
 const backButton = document.getElementById("backButton");
-let nameUser = document.querySelector("#name");
-let copyCli = document.querySelector("#copyCli");
-let copySsh = document.querySelector("#copySsh");
-let copyHttps = document.querySelector("#copyHttps");
-let copyCliButton = document.querySelector("#copyCliButton");
-let copySshButton = document.querySelector("#copySshButton");
-let copyHttpsButton = document.querySelector("#copyHttpsButton");
-let repoNameText = document.querySelector("#repoName");
-let repoDescription = document.querySelector("#repoDescription");
-let createdAt = document.querySelector("#createdAt");
-let updatedAt = document.querySelector("#updatedAt");
-let whatching = document.querySelector("#whatching");
-let fork = document.querySelector("#fork");
-let stars = document.querySelector("#stars");
-let contributors = document.querySelector("#contributors");
-let legends = document.querySelector("#legends");
+const nameUser = document.querySelector("#name");
+const copyCli = document.querySelector("#copyCli");
+const copySsh = document.querySelector("#copySsh");
+const copyHttps = document.querySelector("#copyHttps");
+const copyCliButton = document.querySelector("#copyCliButton");
+const copySshButton = document.querySelector("#copySshButton");
+const copyHttpsButton = document.querySelector("#copyHttpsButton");
+const repoNameText = document.querySelector("#repoName");
+const repoDescription = document.querySelector("#repoDescription");
+const createdAt = document.querySelector("#createdAt");
+const updatedAt = document.querySelector("#updatedAt");
+const whatching = document.querySelector("#whatching");
+const fork = document.querySelector("#fork");
+const stars = document.querySelector("#stars");
+const contributors = document.querySelector("#contributors");
+const legends = document.querySelector("#legends");
 
 let isMobile = window.innerWidth < 768;
 
@@ -53,35 +53,9 @@ function copyToClipboard(text) {
       alert("Copied");
     })
     .catch((err) => {
-      console.error("Error copying to clipboard:", err);
       alert("Unable to copy to clipboard");
     });
 }
-
-backButton.addEventListener("click", function () {
-  window.location.href = "../profile/profile.html";
-})
-
-logout.addEventListener("click", function () {
-  localStorage.clear();
-  window.location.href = "../index.html";
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-  var popover = new bootstrap.Popover(
-    document.getElementById("popoverButton"),
-    {
-      content: document.getElementById("popover-content").innerHTML,
-      html: true,
-    }
-  );
-});
-
-copyCliButton.addEventListener("click", () => copyToClipboard(copyCli.value));
-copySshButton.addEventListener("click", () => copyToClipboard(copySsh.value));
-copyHttpsButton.addEventListener("click", () =>
-  copyToClipboard(copyHttps.value)
-);
 
 async function fetchGetRepo() {
   try {
@@ -107,7 +81,6 @@ async function fetchGetRepo() {
     }
   } catch (error) {
     console.log({ error });
-    // alert("This user does not exist!");
   }
 }
 
@@ -120,7 +93,6 @@ async function fetchGetContributors() {
     }
   } catch (error) {
     console.log({ error });
-    // alert("This user does not exist!");
   }
 }
 
@@ -133,12 +105,13 @@ async function fetchGetLanguages() {
     }
   } catch (error) {
     console.log({ error });
-    // alert("This user does not exist!");
   }
 }
 
 function renderContributors(contributors) {
-  const contributorsContainer = document.querySelector(".contribuitorsContainer");
+  const contributorsContainer = document.querySelector(
+    ".contribuitorsContainer"
+  );
 
   contributors.forEach((contributor) => {
     const contributorDiv = document.createElement("div");
@@ -176,7 +149,7 @@ function renderProgressBars() {
     (accumulator, currentValue) => accumulator + currentValue,
     0
   );
-  const progressContainer =  document.querySelector(".progress");
+  const progressContainer = document.querySelector(".progress");
 
   for (const skill in languages) {
     if (Object.hasOwnProperty.call(languages, skill)) {
@@ -274,10 +247,38 @@ function getLegendColor(language) {
   }
 }
 
+function startEventListeners() {
+  backButton.addEventListener("click", function () {
+    window.location.href = "../profile/profile.html";
+  });
+
+  logout.addEventListener("click", function () {
+    localStorage.clear();
+    window.location.href = "../index.html";
+  });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    var popover = new bootstrap.Popover(
+      document.getElementById("popoverButton"),
+      {
+        content: document.getElementById("popover-content").innerHTML,
+        html: true,
+      }
+    );
+  });
+
+  copyCliButton.addEventListener("click", () => copyToClipboard(copyCli.value));
+  copySshButton.addEventListener("click", () => copyToClipboard(copySsh.value));
+  copyHttpsButton.addEventListener("click", () =>
+    copyToClipboard(copyHttps.value)
+  );
+}
+
 async function main() {
   await fetchGetRepo();
   await fetchGetContributors();
   await fetchGetLanguages();
+  startEventListeners();
   renderProgressBars();
   renderContributors(contributionsList);
   renderLegends();

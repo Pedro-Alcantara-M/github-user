@@ -23,8 +23,9 @@
                     class="d-inline-block align-top">
                 GitHub
             </a>
-            <button id="logout" class="d-flex flex-row align-items-center gap-2 btn text-light">Logout <ion-icon
-                    name="log-out-outline"></ion-icon></button>
+            <button id="logout" class="d-flex flex-row align-items-center gap-2 btn text-light">
+                New Search <ion-icon name="search-circle-outline"></ion-icon>
+            </button>
         </div>
     </nav>
 
@@ -59,17 +60,10 @@
             <section class="col-sm-12 col-md-8  mt-3 ">
                 <div class="justify-content-center align-items-center pb-3">
                     <div class="row border-bottom border-1 pb-3">
-                        <div class="col-lg-8 col-md-12">
+                        <div class="col-lg-7 col-md-12">
                             <div class="input-group">
-                                <input id="searchInput" type="text" class="form-control bg-light" placeholder="Search"
+                                <input id="searchInput" type="text" class="form-control bg-light" placeholder="Search by name"
                                     aria-label="Search" aria-describedby="button-addon2">
-                                <button id="searchButton"
-                                    class="btn btn-outline-secondary  d-flex justify-content-center align-items-center"
-                                    type="button" id="button-addon2">
-                                    <span class="material-symbols-outlined">
-                                        search
-                                    </span>
-                                </button>
                             </div>
                         </div>
 
@@ -81,7 +75,7 @@
                                         Language
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                        <li> <button class="btn filterLanguage" name="">None</button></li>
+                                        <li> <button class="btn filterLanguage" name="">All</button></li>
                                         <li> <button class="btn filterLanguage" name="JavaScript">Javascript</button></li>
                                         <li>
                                             <button class="btn filterLanguage" name="Typescript">Typescript</button>
@@ -93,7 +87,7 @@
                                 </div>
                                 <div class="d-flex justify-content-end">
                                     <button id="sortButton" class="btn btn-outline-secondary">
-                                        Sort
+                                        Sort by <ion-icon name="star-outline"></ion-icon>
                                     </button>
                                 </div>
                             </div>
